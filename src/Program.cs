@@ -27,7 +27,7 @@ IEnumerable<string?> rids =
 var rid = rids.FirstOrDefault(r => validRids.Contains(r));
 if (rid is null)
 {
-    Console.Error.WriteLine("Unsupported RID: {RuntimeInformation.RuntimeIdentifier}");
+    Console.Error.WriteLine($"Unsupported RID: {RuntimeInformation.RuntimeIdentifier}");
     return 1;
 }
 
@@ -70,10 +70,24 @@ static int RunIlTool(IlTool tool, string[] args, string rid)
     }
     var psi = new ProcessStartInfo(toolPath, string.Join(" ", args))
     {
+        RedirectStandardOutput = true,
+        RedirectStandardError = true,
         UseShellExecute = false,
         CreateNoWindow = true
     };
     using var proc = Process.Start(psi);
+    proc.OutputDataReceived += (_, e) =>
+    {
+        if (e.Data != null)
+            Console.WriteLine(e.Data);
+    };
+    proc.ErrorDataReceived += (_, e) =>
+    {
+        if (e.Data != null)
+            Console.Error.WriteLine(e.Data);
+    };
+    proc.BeginOutputReadLine();
+    proc.BeginErrorReadLine();
     proc!.WaitForExit();
     return proc.ExitCode;
 }
