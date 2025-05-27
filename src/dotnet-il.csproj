@@ -9,8 +9,14 @@
         <ToolCommandName>dotnet-il</ToolCommandName>
         <LangVersion>12.0</LangVersion>
         <NeedsPublishing>true</NeedsPublishing>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageTags>il ildasm ilasm msil ir</PackageTags>
+        <PackageLicenceFile>LICENCE</PackageLicenceFile>
     </PropertyGroup>
-
+	<ItemGroup>
+		<None Include="../README.md" Pack="true" PackagePath="" />
+		<None Include="../LICENCE" Pack="true" PackagePath="" />
+	</ItemGroup>
     <PropertyGroup>
         <ILVersion Condition="'$(TargetFramework)' == 'net9.0'">9.*</ILVersion>
         <ILVersion Condition="'$(TargetFramework)' == 'net8.0'">8.*</ILVersion>
