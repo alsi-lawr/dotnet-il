@@ -1,25 +1,43 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFrameworks>net9.0;net8.0;net7.0;net6.0</TargetFrameworks>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <PackAsTool>true</PackAsTool>
-    <ToolCommandName>dotnet-il</ToolCommandName>
-    <LangVersion>12.0</LangVersion>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFrameworks>net9.0;net8.0;net7.0;net6.0</TargetFrameworks>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <PackAsTool>true</PackAsTool>
+        <ToolCommandName>dotnet-il</ToolCommandName>
+        <LangVersion>12.0</LangVersion>
+        <NeedsPublishing>true</NeedsPublishing>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NETCore.ILDAsm" Version="9.*" Condition="'$(TargetFramework)' == 'net9.0'" />
-    <PackageReference Include="Microsoft.NETCore.ILAsm" Version="9.*"  Condition="'$(TargetFramework)' == 'net9.0'" />
-    <PackageReference Include="Microsoft.NETCore.ILDAsm" Version="8.*" Condition="'$(TargetFramework)' == 'net8.0'" />
-    <PackageReference Include="Microsoft.NETCore.ILAsm" Version="8.*"  Condition="'$(TargetFramework)' == 'net8.0'" />
-    <PackageReference Include="Microsoft.NETCore.ILDAsm" Version="7.*" Condition="'$(TargetFramework)' == 'net6.0'" />
-    <PackageReference Include="Microsoft.NETCore.ILAsm" Version="7.*"  Condition="'$(TargetFramework)' == 'net7.0'" />
-    <PackageReference Include="Microsoft.NETCore.ILDAsm" Version="6.*" Condition="'$(TargetFramework)' == 'net6.0'" />
-    <PackageReference Include="Microsoft.NETCore.ILAsm" Version="6.*"  Condition="'$(TargetFramework)' == 'net6.0'" />
-    <TrimmerRootAssembly Include="Microsoft.NETCore.ILDAsm" />
-    <TrimmerRootAssembly Include="Microsoft.NETCore.ILAsm" />
-  </ItemGroup>
+    <PropertyGroup>
+        <ILVersion Condition="'$(TargetFramework)' == 'net9.0'">9.*</ILVersion>
+        <ILVersion Condition="'$(TargetFramework)' == 'net8.0'">8.*</ILVersion>
+        <ILVersion Condition="'$(TargetFramework)' == 'net7.0'">7.*</ILVersion>
+        <ILVersion Condition="'$(TargetFramework)' == 'net6.0'">6.*</ILVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="$(ILVersion)" />
+        <PackageReference Include="runtime.linux-x64.Microsoft.NETCore.ILDAsm" Version="$(ILVersion)" />
+        <PackageReference Include="runtime.linux-arm64.Microsoft.NETCore.ILDAsm" Version="$(ILVersion)" />
+        <PackageReference Include="runtime.linux-musl-x64.Microsoft.NETCore.ILDAsm" Version="$(ILVersion)" />
+        <PackageReference Include="runtime.linux-musl-arm64.Microsoft.NETCore.ILDAsm" Version="$(ILVersion)" />
+        <PackageReference Include="runtime.win-x64.Microsoft.NETCore.ILDAsm" Version="$(ILVersion)" />
+        <PackageReference Include="runtime.win-arm64.Microsoft.NETCore.ILDAsm" Version="$(ILVersion)" />
+        <PackageReference Include="runtime.win-x86.Microsoft.NETCore.ILDAsm" Version="$(ILVersion)" />
+        <PackageReference Include="runtime.osx-x64.Microsoft.NETCore.ILDAsm" Version="$(ILVersion)" />
+        <PackageReference Include="runtime.osx-arm64.Microsoft.NETCore.ILDAsm" Version="$(ILVersion)" />
+        <PackageReference Include="runtime.linux-x64.Microsoft.NETCore.ILAsm" Version="$(ILVersion)" />
+        <PackageReference Include="runtime.linux-arm64.Microsoft.NETCore.ILAsm" Version="$(ILVersion)" />
+        <PackageReference Include="runtime.linux-musl-x64.Microsoft.NETCore.ILAsm" Version="$(ILVersion)" />
+        <PackageReference Include="runtime.linux-musl-arm64.Microsoft.NETCore.ILAsm" Version="$(ILVersion)" />
+        <PackageReference Include="runtime.win-x64.Microsoft.NETCore.ILAsm" Version="$(ILVersion)" />
+        <PackageReference Include="runtime.win-arm64.Microsoft.NETCore.ILAsm" Version="$(ILVersion)" />
+        <PackageReference Include="runtime.win-x86.Microsoft.NETCore.ILAsm" Version="$(ILVersion)" />
+        <PackageReference Include="runtime.osx-x64.Microsoft.NETCore.ILAsm" Version="$(ILVersion)" />
+        <PackageReference Include="runtime.osx-arm64.Microsoft.NETCore.ILAsm" Version="$(ILVersion)" />
+    </ItemGroup>
+
 </Project>

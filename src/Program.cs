@@ -1,5 +1,35 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Text.Json;
+using Microsoft.Extensions.DependencyModel;
+
+IReadOnlyList<string> validRids =
+[
+    "win-x64",
+    "win-arm64",
+    "win-x86",
+    "osx-x64",
+    "osx-arm64",
+    "linux-x64",
+    "linux-arm64",
+    "linux-musl-x64",
+    "linux-musl-arm64"
+];
+
+IEnumerable<string?> rids =
+[
+    .. DependencyContext
+        .Default.RuntimeGraph.SelectMany(g => g.Fallbacks.ToList())
+        .Select(g => g ?? string.Empty),
+    .. DependencyContext.Default.RuntimeGraph.Select(g => g.Runtime)
+];
+
+var rid = rids.FirstOrDefault(r => validRids.Contains(r));
+if (rid is null)
+{
+    Console.Error.WriteLine("Unsupported RID: {RuntimeInformation.RuntimeIdentifier}");
+    return 1;
+}
 
 ReadOnlySpan<string> helpArgs = ["--help", "-h", "help", "/HELP", "/H"];
 if (args.Length == 0 || helpArgs.Contains(args[0]))
@@ -17,15 +47,18 @@ if (args[0].ToLowerInvariant() != "asm" && args[0].ToLowerInvariant() != "dasm")
 
 return args[0].ToLowerInvariant() switch
 {
-    "asm" => RunIlTool(IlTool.ilasm, args[1..]),
-    "dasm" => RunIlTool(IlTool.ildasm, args[1..]),
+    "asm" => RunIlTool(IlTool.ilasm, args[1..], rid),
+    "dasm" => RunIlTool(IlTool.ildasm, args[1..], rid),
     _ => 1,
 };
 
-static int RunIlTool(IlTool tool, string[] args)
+static int RunIlTool(IlTool tool, string[] args, string rid)
 {
     var toolPath = Path.Combine(
         AppContext.BaseDirectory,
+        "runtimes",
+        rid,
+        "native",
         RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? $"{tool}.exe" : $"{tool}"
     );
 
